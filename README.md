@@ -2,7 +2,7 @@
 A comprehensive software simulator implementing Computer Architecture, Operating Systems, and Embedded Systems concepts
 
 ## Overview
-Spectre is a complete, portfolio-worthy project that demonstrates deep understanding across three core computer science domains through a unified software simulator:
+Spectre demonstrates deep understanding across three core computer science domains through a unified software simulator:
 
 - 🧠 Computer Architecture: Cycle-accurate x86-64 pipeline simulator with caches and branch prediction
 
