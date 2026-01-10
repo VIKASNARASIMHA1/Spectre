@@ -101,6 +101,7 @@ python3 scripts/visualize.py
 ## Architecture
 
 ### System Overview
+```
 ┌─────────────────────────────────────────────────┐
 │               Application Layer                  │
 │  Traffic Light | Sensor Monitor | Benchmarks    │
@@ -111,8 +112,10 @@ python3 scripts/visualize.py
 │             Virtual Hardware Layer              │
 │  Memory  │  Cache  │  Peripherals  │  Sensors  │
 └─────────────────────────────────────────────────┘
+```
 
 ### Project Structure
+```
 spectre/
 ├── include/              # Header files
 │   ├── cpu.h            # CPU simulator interface
@@ -154,6 +157,7 @@ spectre/
 │   └── profile.py      # Performance profiling
 ├── Makefile
 └── README.md
+```
 
 ## Documentation
 
