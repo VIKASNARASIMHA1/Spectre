@@ -1,61 +1,128 @@
-# 📑 Technical Design Rationale: Spectre
-
+# Technical Design Rationale: Spectre  
 **Author:** Vikas Narasimha  
-**Project:** Distributed High-Performance Search & Indexing Engine  
+**Project:** Unified Computer Architecture, Operating Systems & Embedded Systems Simulator  
 **Date:** January 2026  
 
 ---
 
 ## 1. Problem Statement
-As datasets grow exponentially, traditional relational databases often struggle with full-text search performance and complex multi-dimensional queries. **Spectre** was engineered as a distributed search engine capable of indexing large-scale unstructured data while providing sub-millisecond retrieval through specialized data structures and distributed partitioning.
+
+Modern computing systems tightly integrate hardware execution, operating systems, and real-time embedded control. However, these domains are often studied independently. **Spectre** was designed as a unified simulator to demonstrate how CPU architecture, OS mechanisms, and embedded scheduling interact within a single cohesive system.
+
+The goal was to build a technically rigorous yet modular platform for experimentation, performance analysis, and systems-level learning.
 
 ---
 
-## 2. Architectural Decisions & Trade-offs
+## 2. Architectural Overview
 
-### A. Inverted Index vs. Forward Index
-* **Decision:** Implementation of an **Inverted Index** as the primary storage structure.
-* **Rationale:** To support fast full-text search, the engine must map terms to their document locations at ingestion time. This allows the query engine to skip full-table scans and jump directly to the relevant document IDs.
-* **Trade-off:** Inverted indices increase the write-latency during ingestion (as the index must be updated), but provide the logarithmic search time required for high-performance applications.
+Spectre follows a layered architecture:
 
+1. **CPU Simulation Layer**  
+2. **Microkernel (Operating System) Layer**  
+3. **Real-Time Embedded (RTOS) Layer**
 
-
-### B. Distributed Sharding & Partitioning
-* **Decision:** Implementation of a **Hash-based Sharding** mechanism to distribute the index across multiple nodes.
-* **Rationale:** A single machine's RAM and Disk are finite. By sharding data based on a document ID hash, Spectre ensures an even distribution of data, preventing "Hot Spots" and allowing for horizontal scalability.
-* **Academic Significance:** This demonstrates a practical application of **Consistent Hashing** and the **Shared-Nothing Architecture** common in systems like Elasticsearch or Apache Solr.
-
-
-
-### C. Query Execution & Ranking
-* **Decision:** Implementation of a scoring algorithm (e.g., TF-IDF or BM25 logic) to rank search results.
-* **Rationale:** A search engine's value is determined by "Relevance." By calculating the weight of terms within a document relative to the entire corpus, Spectre ensures the most contextually accurate results are returned first.
+This separation ensures modular clarity while preserving realistic cross-layer interactions.
 
 ---
 
-## 3. Storage & Memory Management
-To handle high-throughput search queries, Spectre utilizes:
-1.  **Memory-Mapped Files (mmap):** Allows the engine to treat files on disk as if they were in memory, leveraging the OS kernel's page cache for high-speed I/O.
-2.  **Segment Merging:** As new data is ingested, small index segments are created. Spectre periodically merges these segments in the background to optimize search performance and reclaim disk space (similar to a Log-Structured Merge Tree approach).
+## 3. Computer Architecture Design
 
+### 3.1 5-Stage Pipeline
 
+A classic 5-stage pipeline (Fetch, Decode, Execute, Memory, Writeback) was implemented to model:
+
+- Data, control, and structural hazards  
+- Forwarding and stalls  
+- Cycle-accurate instruction flow  
+
+This balances realism with conceptual clarity.
+
+### 3.2 Cache Hierarchy
+
+Configurable L1/L2 set-associative caches were implemented to enable:
+
+- Performance experimentation  
+- CPI analysis  
+- Evaluation of replacement and write policies  
+
+### 3.3 Tomasulo’s Algorithm
+
+Dynamic scheduling via Tomasulo’s algorithm demonstrates:
+
+- Register renaming  
+- Reservation stations  
+- Instruction-level parallelism (ILP)  
+
+This elevates the simulator beyond a basic in-order pipeline model.
 
 ---
 
-## 4. Reliability and Consistency
-* **Leader-Follower Replication:** To ensure high availability, Spectre supports replicating shards across multiple nodes. If a primary shard fails, a replica is promoted to ensure zero downtime for search queries.
-* **Write-Ahead Logging (WAL):** Every ingestion request is first appended to a WAL, ensuring that data is never lost in the event of a sudden power failure or crash during index updates.
+## 4. Operating System Design
+
+### 4.1 Microkernel Architecture
+
+A microkernel design was chosen to modularize:
+
+- Scheduler  
+- Memory manager  
+- IPC subsystem  
+- Virtual filesystem  
+
+This improves extensibility and separation of concerns.
+
+### 4.2 MLFQ Scheduler
+
+A 16-level Multi-Level Feedback Queue (MLFQ) scheduler balances:
+
+- Responsiveness  
+- Fairness  
+- Starvation avoidance  
+
+### 4.3 Virtual Memory
+
+Paging with TLB simulation enables:
+
+- Address translation modeling  
+- Page fault handling  
+- Process isolation  
 
 ---
 
-## 5. Performance Benchmarks
-* **Search Latency:** P99 latency of $< 15ms$ for multi-term queries across 1M+ documents.
-* **Ingestion Rate:** Capable of indexing $10,000+$ documents per second through parallelized pipeline processing.
-* **Query Concurrency:** Non-blocking query execution allowing for hundreds of simultaneous search requests.
+## 5. Embedded & Real-Time System Design
+
+### 5.1 RTOS with Rate Monotonic Scheduling
+
+The RTOS implements Rate Monotonic Scheduling (RMS) to provide:
+
+- Deterministic periodic task execution  
+- Formal schedulability analysis  
+
+### 5.2 Virtual Hardware Layer
+
+Simulated GPIO, timers, UART, and sensors form a Hardware Abstraction Layer (HAL), mirroring real embedded architectures and enabling safe experimentation.
 
 ---
 
-## 6. Conclusion
-**Spectre** showcases advanced proficiency in **Information Retrieval (IR)**, **Distributed Data Management**, and **Systems Optimization**. It demonstrates the ability to build a complex, data-intensive application that prioritizes both speed and accuracy, rounding out a comprehensive Distributed Systems portfolio.
+## 6. Performance Instrumentation
+
+Spectre includes built-in metrics for:
+
+- CPI measurement  
+- Cache hit/miss rates  
+- Branch prediction accuracy  
+- Scheduler overhead  
+- Power-state modeling  
+
+This transforms the system into a performance analysis platform rather than a static simulator.
 
 ---
+
+## 7. Conclusion
+
+Spectre demonstrates strong proficiency in:
+
+- Computer Architecture  
+- Operating Systems  
+- Embedded & Real-Time Systems  
+
+By integrating hardware simulation, kernel mechanisms, and real-time scheduling into a unified platform, Spectre reflects advanced systems-level design and implementation capability.
